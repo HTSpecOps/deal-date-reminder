@@ -6,33 +6,32 @@ require('dotenv').config()
 
 let t = new Date(Date.now())
 
-var task = cron.schedule("*/1 * * * *", () => {
+//Schedule task to run on FIRST tuesday of each month
+var task = cron.schedule("30 12 */100,1-7 * TUE", () => {
   //log time
   console.log(t.toUTCString())
+  //sendReminder().catch(console.error);
 }, {
   scheduled: false,
   timezone: "America/Toronto"
 })
-//task.start()
+task.start()
 
 //############## NODEMAILER ######################
+// create reusable transporter object using the default SMTP transport
+let transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    //use standard app-password login
+    user: process.env.EMAIL_ACCOUNT_USER,
+    pass: process.env.EMAIL_ACCOUNT_PASS,
+  },
+});
 
-// async..await is not allowed in global scope, must use a wrapper
-async function main() {
-
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-      //use standard app-password login
-      user: process.env.EMAIL_ACCOUNT_USER,
-      pass: process.env.EMAIL_ACCOUNT_PASS,
-    },
-  });
-  
-  
+//async..await is not allowed in global scope, must use a wrapper
+async function sendReminder() {
   // send mail with defined transport object
   let info = await transporter.sendMail({
     from: process.env.EMAIL_SENDER, // sender address
@@ -40,11 +39,5 @@ async function main() {
     subject: "Smoked Meat Tuesday", // Subject line
     html: "Hello, This is a friendly reminder that <h3>🔥TODAY🔥</h3> the smoked meat plater is <b>10.99$</b> at you know where", // html body
   });
-
   console.log("Message sent: %s", info.messageId);
-  // Preview only available when sending through an Ethereal account
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-
 }
-
-main().catch(console.error);
