@@ -2,12 +2,11 @@
 const cron = require("node-cron")
 const nodemailer = require("nodemailer")
 require('dotenv').config()
-//console.log(process.env)
 
 let t = new Date(Date.now())
 
-//Schedule task to run on FIRST tuesday of each month
-var task = cron.schedule("30 12 */100,1-7 * TUE", () => {
+//Schedule task to run on FIRST tuesday of each month 30 12 */100,1-7 * TUE
+var task = cron.schedule("*/1 * * * *", () => {
   //log time
   console.log(t.toUTCString())
   //sendReminder().catch(console.error);
