@@ -6,7 +6,7 @@ require('dotenv').config()
 let t = new Date(Date.now())
 
 //Schedule task to run on FIRST tuesday of each month
-var task = cron.schedule("30 12 */100,1-7 * TUE", () => {
+var task = cron.schedule("30 12 */100,1-7 * Mon", () => {
   //log time
   console.log(t.toUTCString())
   sendReminder().catch(console.error);
@@ -36,7 +36,7 @@ async function sendReminder() {
     from: process.env.EMAIL_SENDER, // sender address
     to: process.env.EMAIL_RECEIVER, // list of receivers
     subject: "Smoked Meat Tuesday", // Subject line
-    html: "Hello, This is a friendly reminder that <h3>🔥TODAY🔥</h3> the smoked meat plater is <b>10.99$</b> at you know where", // html body
+    html: "Hello, This is a friendly reminder that <h3>🔥TOMORROW🔥</h3> the smoked meat plater is <b>10.99$</b> at you know where", // html body
   });
   console.log("Message sent: %s", info.messageId);
 }
