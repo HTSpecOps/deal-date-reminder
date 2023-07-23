@@ -3,13 +3,10 @@ const cron = require("node-cron")
 const nodemailer = require("nodemailer")
 require('dotenv').config()
 
-let t = new Date(Date.now())
-
+console.log("starting...")
 //Schedule task to run on FIRST tuesday of each month
-var task = cron.schedule("30 12 */100,1-7 * Mon", () => {
-  //log time
-  console.log(t.toUTCString())
-  sendReminder().catch(console.error);
+var task = cron.schedule("0 12 * * *", () => {
+  validateDate()
 }, {
   scheduled: false,
   timezone: "America/Toronto"
@@ -30,7 +27,7 @@ let transporter = nodemailer.createTransport({
 });
 
 //async..await is not allowed in global scope, must use a wrapper
-async function sendReminder() {
+async function sendReminder(){
   // send mail with defined transport object
   let info = await transporter.sendMail({
     from: process.env.EMAIL_SENDER, // sender address
@@ -40,3 +37,19 @@ async function sendReminder() {
   });
   console.log("Message sent: %s", info.messageId);
 }
+
+//Check if the day is Monday, if so, run the email mailer
+function validateDate(){
+  let d = new Date(Date.now())
+  let date = d.getDate()
+  let day = d.getDay()
+  if(date<=7 && day === 1){
+    //log time
+    console.log(d.toUTCString())
+    sendReminder().catch(console.error)
+  }
+}
+
+
+
+
