@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer")
 require('dotenv').config()
 
 console.log("starting...")
-//Schedule task to run on FIRST tuesday of each month
+//Schedule task to run once a day
 var task = cron.schedule("0 12 * * *", () => {
   validateDate()
 }, {
@@ -41,10 +41,11 @@ async function sendReminder(){
 //Check if the day is Monday, if so, run the email mailer
 function validateDate(){
   let d = new Date(Date.now())
+  d = d.setDate(d.getDate()+1) //set the day 1 day in the future
   let date = d.getDate()
   let day = d.getDay()
-  if(date<=7 && day === 1){
-    //log time
+  if(date<=7 && day === 2){
+    //run below if "tomorrow" is the first Tuesday of the month
     console.log(d.toUTCString())
     sendReminder().catch(console.error)
   }
