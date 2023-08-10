@@ -1,9 +1,11 @@
 "use strict"
-const cron = require("node-cron")
-const nodemailer = require("nodemailer")
-require('dotenv').config()
+import cron from "node-cron"
+import nodemailer from "nodemailer"
+import "dotenv/config"
+import {logger} from "./logger.js"
 
-console.log("starting...")
+// console.log("starting...")
+logger.info("program start")
 //Schedule task to run once a day
 var task = cron.schedule("0 12 * * *", () => {
   validateDate()
@@ -35,7 +37,7 @@ async function sendReminder(){
     subject: "Smoked Meat Tuesday", // Subject line
     html: "Hello, This is a friendly reminder that <h3>🔥TOMORROW🔥</h3> the smoked meat plater is <b>10.99$</b> at you know where", // html body
   });
-  console.log("Message sent: %s", info.messageId);
+  logger.info("Message sent: %s", info.messageId);
 }
 
 //Check if the day is Monday, if so, run the email mailer
@@ -46,7 +48,7 @@ function validateDate(){
   let day = d.getDay()
   if(date<=7 && day === 2){
     //run below if "tomorrow" is the first Tuesday of the month
-    console.log(d.toUTCString())
+    logger.info(d.toUTCString())
     sendReminder().catch(console.error)
   }
 }
