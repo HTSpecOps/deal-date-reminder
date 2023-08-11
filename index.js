@@ -5,9 +5,9 @@ import "dotenv/config"
 import {logger} from "./logger.js"
 
 // console.log("starting...")
-logger.info("program start")
+logger.info("starting...")
 //Schedule task to run once a day
-var task = cron.schedule("0 12 * * *", () => {
+var task = cron.schedule(process.env.CRONTAB, () => {
   validateDate()
 }, {
   scheduled: false,
@@ -42,14 +42,16 @@ async function sendReminder(){
 
 //Check if the day is Monday, if so, run the email mailer
 function validateDate(){
-  let d = new Date(Date.now())
-  d = d.setDate(d.getDate()+1) //set the day 1 day in the future
-  let date = d.getDate()
-  let day = d.getDay()
+  let d = new Date(Date())
+  d.setDate(d.getDate()+1) //set the day 1 day in the future
+  const date = d.getDate()
+  const day = d.getDay()
   if(date<=7 && day === 2){
     //run below if "tomorrow" is the first Tuesday of the month
-    logger.info(d.toUTCString())
+    logger.warn({tomorrow: d, jsDate: date, jsDay: day}, "Smoke Meat Day!")
     sendReminder().catch(console.error)
+  }else{
+    logger.info({tomorrow: d, jsDate: date, jsDay: day}, "no joy!")
   }
 }
 
