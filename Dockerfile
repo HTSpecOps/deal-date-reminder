@@ -7,6 +7,6 @@ COPY ["package.json", "package-lock.json*", "./"]
 
 RUN npm install --production
 
-COPY ["index.js",".env", "./"]
+COPY ["index.js", "logger.js", ".env", "./"]
 
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
