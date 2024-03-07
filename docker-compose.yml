@@ -1,0 +1,7 @@
+version: '3.8' # Or a suitable Compose file version
+services:
+  deal-date-reminder:
+    image: deal-date-reminder # Same as the tag in your build command
+    build: .  # Indicate that the Dockerfile is in the current directory
+    restart: unless-stopped  # Matches the --restart flag in your run command
+    container_name: deal-date-reminder # Matches the --name in your run command
