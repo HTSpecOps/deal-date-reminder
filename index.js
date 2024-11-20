@@ -53,12 +53,17 @@ function sleep(ms) {
 
 // const { Builder, Browser, By, Key, until } = require('selenium-webdriver')
 import { Builder, Browser, By, Key, until } from "selenium-webdriver"
+import firefox from 'selenium-webdriver/firefox.js';
 
   ; (async function example() {
+
+    let options = new firefox.Options()
+    options.addArguments("-headless")
 
     let innerText
     let driver = await new Builder()
       .forBrowser(Browser.FIREFOX)
+      .setFirefoxOptions(options)
       .build();
     while (true) {
       try {
