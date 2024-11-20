@@ -69,7 +69,7 @@ import firefox from 'selenium-webdriver/firefox.js';
       try {
         await driver.get(process.env.WATCHED_URL)
         const xpath = "//div[contains(text(), 'Sorry, tickets are not currently available online.')]";
-        const divElement = await driver.wait(until.elementLocated(By.xpath(xpath)), 500);
+        const divElement = await driver.wait(until.elementLocated(By.xpath(xpath)), 5000);
         logger.info("DIV Element Found!")
         // const divText = await divElement.getText();
         // console.log('Found div with text:', divText);
