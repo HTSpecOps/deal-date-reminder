@@ -58,7 +58,7 @@ import firefox from 'selenium-webdriver/firefox.js';
   ; (async function example() {
 
     let options = new firefox.Options()
-    options.addArguments("-headless")
+    //options.addArguments("-headless")
 
     let innerText
     let driver = await new Builder()
@@ -67,16 +67,15 @@ import firefox from 'selenium-webdriver/firefox.js';
       .build();
     while (true) {
       try {
-        await driver.get('https://www.ticketmaster.ca/taylor-swift-the-eras-tour-toronto-ontario-11-21-2024/event/10005F01FC4E4BD4')
-
+        await driver.get(process.env.WATCHED_URL)
         const xpath = "//div[contains(text(), 'Sorry, tickets are not currently available online.')]";
         const divElement = await driver.wait(until.elementLocated(By.xpath(xpath)), 500);
-        console.log('Success: Div found')
+        logger.info("DIV Element Found!")
         // const divText = await divElement.getText();
         // console.log('Found div with text:', divText);
       }catch (error) {
         if (error.name === 'NoSuchElementError') {
-          console.log('Failed to find the div element with the specified class name');
+          logger.warn("DIV Element Not Fount!")
           sendReminder()
           sleep(30000)
           await driver.quit()
@@ -91,7 +90,7 @@ import firefox from 'selenium-webdriver/firefox.js';
         await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 30) * 100));
         // Refresh the page
         await driver.navigate().refresh();
-        console.log('Page refreshed');
+        //console.log('Page refreshed');
       }
     }
   })()
