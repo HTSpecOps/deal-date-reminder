@@ -25,8 +25,8 @@ async function sendReminder() {
   let info = await transporter.sendMail({
     from: process.env.EMAIL_SENDER, // sender address
     to: process.env.EMAIL_RECEIVER, // list of receivers
-    subject: "Tay Bot", // Subject line
-    html: "Hello, this is a test", // html body
+    subject: "🎵 Tay Bot 🎵", // Subject line
+    html: "Hello, GET IN THE QUEUE  --> https://www.ticketmaster.ca/taylor-swift-the-eras-tour-toronto-ontario-11-21-2024/event/10005F01FC4E4BD4", // html body
   });
   logger.info("Message sent: %s", info.messageId);
 }
@@ -72,14 +72,21 @@ import { Builder, Browser, By, Key, until } from "selenium-webdriver"
       }catch (error) {
         if (error.name === 'NoSuchElementError') {
           console.log('Failed to find the div element with the specified class name');
+          sendReminder()
+          sleep(30000)
+          await driver.quit()
         } else {
-          console.error('#An error occurred:', error.message);
-      }
-        sleep(1000)
-
-      } finally {
+          console.error('#An error occurred:', error.message)
+          //sendReminder()
+        }
+      } 
+      finally {
         //await driver.quit()
-
+        // Wait for 2 seconds
+        await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 30) * 100));
+        // Refresh the page
+        await driver.navigate().refresh();
+        console.log('Page refreshed');
       }
     }
   })()
