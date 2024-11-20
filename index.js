@@ -1,19 +1,10 @@
 "use strict"
-import cron from "node-cron"
 import nodemailer from "nodemailer"
 import "dotenv/config"
 import {logger} from "./logger.js"
 
 // console.log("starting...")
 logger.info("starting...")
-//Schedule task to run once a day
-var task = cron.schedule(process.env.CRONTAB, () => {
-  validateDate()
-}, {
-  scheduled: false,
-  timezone: "America/Toronto"
-})
-task.start()
 
 //############## NODEMAILER ######################
 // create reusable transporter object using the default SMTP transport
@@ -55,6 +46,14 @@ function validateDate(){
   }
 }
 
+//Quality of life func
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 
-
+//Main loop
+while(true){
+  await sleep(1000);//3000ms
+  validateDate();
+}
