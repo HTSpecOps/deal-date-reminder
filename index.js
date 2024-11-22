@@ -26,7 +26,7 @@ async function sendReminder() {
     from: process.env.EMAIL_SENDER, // sender address
     to: process.env.EMAIL_RECEIVER, // list of receivers
     subject: "🎵 Tay Bot 🎵", // Subject line
-    html: "Hello, GET IN THE QUEUE  --> https://www.ticketmaster.ca/taylor-swift-the-eras-tour-toronto-ontario-11-23-2024/event/10005F01FCD24C29", // html body
+    html: "Hello, GET IN THE QUEUE  --> " + process.env.WATCHED_URL, // html body
   });
   logger.info("Message sent: %s", info.messageId);
 }
