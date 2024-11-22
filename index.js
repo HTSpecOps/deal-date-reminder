@@ -58,18 +58,20 @@ import firefox from 'selenium-webdriver/firefox.js';
   ; (async function example() {
 
     let options = new firefox.Options()
-    //options.addArguments("-headless")
+    options.addArguments("-headless")
 
     let innerText
     let driver = await new Builder()
       .forBrowser(Browser.FIREFOX)
       .setFirefoxOptions(options)
       .build();
+    
+    await driver.get(process.env.WATCHED_URL)
     while (true) {
       try {
-        await driver.get(process.env.WATCHED_URL)
+        // await driver.get(process.env.WATCHED_URL)
         const xpath = "//div[contains(text(), 'Sorry, tickets are not currently available online.')]";
-        const divElement = await driver.wait(until.elementLocated(By.xpath(xpath)), 5000);
+        const divElement = await driver.wait(until.elementLocated(By.xpath(xpath)), 8000);
         logger.info("DIV Element Found!")
         // const divText = await divElement.getText();
         // console.log('Found div with text:', divText);
@@ -81,7 +83,7 @@ import firefox from 'selenium-webdriver/firefox.js';
           await driver.quit()
         } else {
           console.error('#An error occurred:', error.message)
-          //sendReminder()
+          sendReminder()
         }
       } 
       finally {
@@ -90,15 +92,7 @@ import firefox from 'selenium-webdriver/firefox.js';
         await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 30) * 100));
         // Refresh the page
         await driver.navigate().refresh();
-        //console.log('Page refreshed');
+        console.log('Page refreshed');
       }
     }
   })()
-
-
-
-//Main loop
-// while(true){
-//   await sleep(1000);//3000ms
-//   //validateDate();
-// }
