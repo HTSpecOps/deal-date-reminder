@@ -26,7 +26,7 @@ async function sendReminder() {
     from: process.env.EMAIL_SENDER, // sender address
     to: process.env.EMAIL_RECEIVER, // list of receivers
     subject: "🎵 Tay Bot 🎵", // Subject line
-    html: "Hello, GET IN THE QUEUE  -->  " + process.env.WATCHED_URL, // html body
+    html: "Hello, GET IN THE QUEUE  --> https://www.ticketmaster.ca/taylor-swift-the-eras-tour-toronto-ontario-11-23-2024/event/10005F01FCD24C29", // html body
   });
   logger.info("Message sent: %s", info.messageId);
 }
@@ -45,6 +45,7 @@ function validateDate() {
     logger.info({ tomorrow: d, jsDate: date, jsDay: day }, "no joy!")
   }
 }
+
 //Quality of life func
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -53,7 +54,6 @@ function sleep(ms) {
 // const { Builder, Browser, By, Key, until } = require('selenium-webdriver')
 import { Builder, Browser, By, Key, until } from "selenium-webdriver"
 import firefox from 'selenium-webdriver/firefox.js';
-
 
   ; (async function example() {
 
@@ -71,19 +71,33 @@ import firefox from 'selenium-webdriver/firefox.js';
       try {
         // await driver.get(process.env.WATCHED_URL)
         const xpath = "//div[contains(text(), 'Sorry, tickets are not currently available online.')]";
-        const divElement = await driver.wait(until.elementLocated(By.xpath(xpath)), 8000);
-        logger.info("DIV Element Found!")
+        await driver.wait(until.elementLocated(By.xpath(xpath)), 3000);
+        logger.info("DIV Element 1 Found!")
+        return
         // const divText = await divElement.getText();
         // console.log('Found div with text:', divText);
       }catch (error) {
-        if (error.name === 'NoSuchElementError') {
-          logger.warn("DIV Element Not Fount!")
-          sendReminder()
-          sleep(30000)
-          await driver.quit()
+        logger.info("Did not found elem 1")
+        if (error.message.includes('Wait timed out after')) {
+          try{
+            const xpath2 = "//div[contains(text(), 'Tickets are sold out now. Check back soon.')]";
+            await driver.wait(until.elementLocated(By.xpath(xpath2)), 3000);
+            logger.info("DIV Element 2 Found!")
+            return
+          } catch (error2) {
+            if (error.message.includes('Wait timed out after')){
+            logger.warn("=====BOTH Element Not Fount!========")
+            sendReminder()
+            sleep(30000)
+            await driver.quit()
+            }
+          }finally {
+            logger.info("Did not found elem 1")
+          }
+          
         } else {
           console.error('#An error occurred:', error.message)
-          //sendReminder()
+          sendReminder()
         }
       } 
       finally {
@@ -93,6 +107,7 @@ import firefox from 'selenium-webdriver/firefox.js';
         // Refresh the page
         await driver.navigate().refresh();
         console.log('Page refreshed');
+        example();
       }
     }
   })()
