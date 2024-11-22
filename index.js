@@ -26,7 +26,7 @@ async function sendReminder() {
     from: process.env.EMAIL_SENDER, // sender address
     to: process.env.EMAIL_RECEIVER, // list of receivers
     subject: "🎵 Tay Bot 🎵", // Subject line
-    html: "Hello, GET IN THE QUEUE  --> https://www.ticketmaster.ca/taylor-swift-the-eras-tour-toronto-ontario-11-21-2024/event/10005F01FC4E4BD4", // html body
+    html: "Hello, GET IN THE QUEUE  -->  " + process.env.WATCHED_URL, // html body
   });
   logger.info("Message sent: %s", info.messageId);
 }
@@ -45,7 +45,6 @@ function validateDate() {
     logger.info({ tomorrow: d, jsDate: date, jsDay: day }, "no joy!")
   }
 }
-
 //Quality of life func
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -54,6 +53,7 @@ function sleep(ms) {
 // const { Builder, Browser, By, Key, until } = require('selenium-webdriver')
 import { Builder, Browser, By, Key, until } from "selenium-webdriver"
 import firefox from 'selenium-webdriver/firefox.js';
+
 
   ; (async function example() {
 
@@ -83,7 +83,7 @@ import firefox from 'selenium-webdriver/firefox.js';
           await driver.quit()
         } else {
           console.error('#An error occurred:', error.message)
-          sendReminder()
+          //sendReminder()
         }
       } 
       finally {
